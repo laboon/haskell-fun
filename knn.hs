@@ -8,6 +8,17 @@ data Element = Element {  classification :: String
                         , location :: [Integer]
                        } deriving (Eq, Show, Ord)
 
+-- mostCommon :: (Eq a) => Integer -> Integer -> a -> a -> [a] -> a
+-- mostCommon max cur maxSt st (x:xs) = if (st == Nothing) then
+--                                   mostCommon 1 1 x x [xs]
+--                                else if null xs then
+--                                   maxSt
+--                                else if (x == st) then
+--                                   mostCommon (max + 1) (
+
+getMostCommonElement :: [Element] -> String
+getMostCommonElement elems =  head . head . reverse $ sortBy (comparing length) $ group $ sort $ map (classification) elems
+
 euclideanDistance :: [Integer] -> [Integer] -> Double
 euclideanDistance p1 p2 = sqrt
                           . fromIntegral
@@ -19,11 +30,17 @@ comparingDist p e = euclideanDistance p $ location e
 sortByDistance :: [Integer] -> [Element] -> [Element]
 sortByDistance p elems = sortBy (compare `on` comparingDist p) elems
 
+comparingClassification :: Element -> String
+comparingClassification elem = show $ classification elem
+
+sortByClassification :: [Element] -> [Element]
+sortByClassification elems = sortBy (compare `on` comparingClassification) elems
+
 closestNeighbors :: Integer -> [Integer] -> [Element] -> [Element]
 closestNeighbors num p elems = take (fromIntegral num) $ sortByDistance p elems
 
 classify :: Integer -> [Integer] -> [Element] -> String
-classify num p elems = show $ closestNeighbors num p elems
+classify num p elems = show $ getMostCommonElement $ sortByClassification $ closestNeighbors num p elems
 
 main = do
 
@@ -31,7 +48,7 @@ main = do
            Element "Elf" [1,3,3],
            Element "Elf" [1,2,3],
            Element "Elf" [1,1,2],
-           Element "Elf" [2,2,2],
+           Element "Elf" [4,5,5],
            Element "Gnome" [5,5,5],
            Element "Gnome" [7,6,5],
            Element "Gnome" [8,8,8],
@@ -42,4 +59,5 @@ main = do
   p <- getLine
   putStrLn "Enter num neighbors: "
   n <- getLine
-  putStrLn $ "Classification is: " ++ (show (classify (read n :: Integer) (read p :: [Integer]) e))
+  putStrLn $ "Classification is: "
+    ++ (classify (read n :: Integer) (read p :: [Integer]) e)
