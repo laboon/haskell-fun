@@ -8,14 +8,6 @@ data Element = Element {  classification :: String
                         , location :: [Integer]
                        } deriving (Eq, Show, Ord)
 
--- mostCommon :: (Eq a) => Integer -> Integer -> a -> a -> [a] -> a
--- mostCommon max cur maxSt st (x:xs) = if (st == Nothing) then
---                                   mostCommon 1 1 x x [xs]
---                                else if null xs then
---                                   maxSt
---                                else if (x == st) then
---                                   mostCommon (max + 1) (
-
 getMostCommonElement :: [Element] -> String
 getMostCommonElement elems =  head . head . reverse $ sortBy (comparing length) $ group $ sort $ map (classification) elems
 
