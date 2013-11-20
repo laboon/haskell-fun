@@ -10,13 +10,15 @@ import Data.Ord
 import Data.List
 import Data.Function
 import qualified Data.Vector as V
+import Data.PSQueue as PSQueue
+import Control.Parallel.Strategies as S
 
 data Element = Element {  classification :: String
                         , location :: V.Vector Integer
                        } deriving (Eq, Show, Ord)
 
 getMostCommonElement :: [Element] -> String
-getMostCommonElement elems =  head . head . reverse $ sortBy (comparing length) $ group $ sort $ map (classification) elems
+getMostCommonElement elems =  head . head . reverse $ sortBy (comparing length) $ group $ sort $ S.parMap rpar (classification) elems
 
 euclideanDistance :: V.Vector Integer -> V.Vector Integer -> Double
 euclideanDistance p1 p2 = fromIntegral . V.foldr (+) 0 $ V.map (^2) $ V.zipWith (-) p1 p2
