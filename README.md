@@ -15,3 +15,5 @@ fizzlc.hs = FizzBuzz with a list comprehension.
 knn.hs = A simple version of the k-Nearest Neighbors algorithm.
 
 knn2.hs = An improved version of knn with numerous efficiency enhancements.
+
+mandelbrot.hs = Plots out the Mandelbrot set.  Requires gnuplot (install on system + cabal install gnuplot).
