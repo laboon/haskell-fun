@@ -10,7 +10,7 @@ shouldShow x
   | otherwise = False
 
 allPoints :: [(Double, Double)]
-allPoints = [ (x,y) | x <- [-2, -1.995 .. 0.5], y <- [1, 0.995 .. -1]]
+allPoints = [ (x,y) | x <- [-2, -1.999 .. 0.5], y <- [1, 0.999 .. -1]]
 
 mandelbrotPoints :: [(Double, Double)]
 mandelbrotPoints = filter (\p -> (shouldShow ((fst p) :+ (snd p)))) allPoints
