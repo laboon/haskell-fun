@@ -1,25 +1,24 @@
--- Improved implementation of the KNN algorithm in Haskell
--- Changes from knn.hs:
--- Remove double-sorting by classification. Now done only in getMostCommonElement. [DONE]
--- Use Vectors instead of lists [DONE]
--- No need for sqrt in euclidean distance calc if just comparing [DONE]
--- Use priority queue [NOT DONE]
--- Parallelize [NOT DONE]
-
+-- Improved implementation of the kNN algorithm in Haskell
+-- The k-Nearest Neighbors algorithm classifies an element according to
+-- the mode of the classification of the k nearest neighbors.
 import Data.Ord
 import Data.List
 import Data.Function
 import qualified Data.Vector as V
-import Data.PSQueue as PSQueue
-import Control.Parallel.Strategies as S
 
 data Element = Element {  classification :: String
                         , location :: V.Vector Integer
                        } deriving (Eq, Show, Ord)
 
+-- Get the most common element of a list.
+-- Note this is not the most efficient algorithm, but since size of lists will usually be <10,
+-- this is not a huge issue.
 getMostCommonElement :: [Element] -> String
-getMostCommonElement elems =  head . head . reverse $ sortBy (comparing length) $ group $ sort $ S.parMap rpar (classification) elems
+getMostCommonElement elems =  head . head . reverse $ sortBy (comparing length) $ group . sort $ map (classification) elems
 
+-- Note that for performance reasons, this does not do the final square root of the distance
+-- value.  This is because for comparisons, the relative distance is all that matters,
+-- not absolute, and sqrt() does not change the relevant ordering.
 euclideanDistance :: V.Vector Integer -> V.Vector Integer -> Double
 euclideanDistance p1 p2 = fromIntegral . V.foldr (+) 0 $ V.map (^2) $ V.zipWith (-) p1 p2
 
@@ -48,7 +47,8 @@ main = do
            Element "Gnome" (V.fromList [2,3,4]),
            Element "Gnome" (V.fromList [3,2,1])]
 
-  putStrLn "Enter point: "
+
+  putStrLn "Enter 3D point in format [x,y,z]: "
   p <- getLine
   putStrLn "Enter num neighbors: "
   n <- getLine
