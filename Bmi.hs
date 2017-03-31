@@ -20,4 +20,3 @@ main = do
   height <- return val
   putStrLn "Your BMI is: "
   putStrLn $ show $ bmi (read weight) (read height)
-  putStrLn $ bmiTell (read weight) (read height)
